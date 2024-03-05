@@ -1,0 +1,73 @@
+<h2>Bill Splitter</h2>
+
+<table id="billTable">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Item Name</th>
+      <th>Item Cost ($)</th>
+      <th>People</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of items; let i = index">
+      <td><button (click)="removeItem(i)">X</button></td>
+      <td><input type="text" name="itemName" [(ngModel)]="item.name"></td>
+      <td><input type="number" name="itemCost" step="0.01" [(ngModel)]="item.cost"></td>
+      <td>
+        <input type="checkbox" name="selectAll" (change)="toggleSelectAll($event, item, people)"> Select All
+        <label *ngFor="let person of people">
+          <input type="checkbox" name="person" [value]="person" [checked]="item.people.includes(person)" (change)="togglePerson(item, person)">
+          {{ person }}
+        </label>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<button (click)="addItem()">Add Item</button>
+<button (click)="addNewPerson()">Add Person</button>
+<input type="text" [(ngModel)]="newPersonName" placeholder="Enter new person's name">
+
+
+  
+<div *ngFor="let person of people; let j = index">
+    <h3>{{ person }}</h3>
+    <button (click)="removePerson(j)">X</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Item Name</th>
+          <th>Owed Amount ($)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let item of items">
+          <tr *ngIf="getItemOwedAmountForPerson(item, person) > 0">
+            <td>{{ item.name }}</td>
+            <td>${{ getItemOwedAmountForPerson(item, person).toFixed(2) }}</td>
+          </tr>
+        </ng-container>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td>${{ getTotalOwedAmountForPerson(person).toFixed(2) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  
+<table>
+    <thead>
+      <tr>
+        <th>Person</th>
+        <th>Owed Amount ($)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let person of people">
+        <td>{{ person }}</td>
+        <td>${{ getTotalOwedAmountForPerson(person).toFixed(2) }}</td>
+      </tr>
+    </tbody>
+  </table>
